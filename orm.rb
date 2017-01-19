@@ -12,19 +12,17 @@ class Orm
       @table_name = class_name
     end
 
-    attr_reader :table_name
-
     def create_table
       query = "CREATE TABLE #{@table_name} (id INTEGER PRIMARY KEY, name VARCHAR(64));"
       @con.exec(query)
     end
 
-    def add_items(items)
+    def create(items)
       prepare_insert
       @con.exec_prepared("insert_#{@table_name}", [items[0],items[1]])
     end
 
-    def get_items
+    def select_all
       items = Array.new
       @con.exec("SELECT * FROM #{@table_name}") do |result|
         i = result.count - 1
@@ -36,12 +34,12 @@ class Orm
       p items
     end
 
-    def update_items(items)
+    def update(items)
       @con.exec("UPDATE #{@table_name} SET #{items[:name]} = '#{items[:new_value]}'
                  WHERE #{items[:name]} = '#{items[:old_value]}';")
     end
 
-    def delete_items(element)
+    def delete(element)
       @con.exec("DELETE FROM #{@table_name} WHERE #{element[:name]} = '#{element[:value]}';")
     end
 

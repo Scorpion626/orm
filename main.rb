@@ -31,12 +31,12 @@ items_to_del = {:name => "name", :value => "new_try"}
 #block.delete_item(items_to_del)
 #block.get_item
 Block.conn(options)
-Block.add_items(array)
-Block.get_items
-Block.update_items(items_to_update)
-Block.get_items
-Block.delete_items(items_to_del)
-Block.get_items
+Block.create(array)
+Block.select_all
+Block.update(items_to_update)
+Block.select_all
+Block.delete(items_to_del)
+Block.select_all
 Block.close_connection
 
 
