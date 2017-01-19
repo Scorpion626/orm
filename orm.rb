@@ -1,22 +1,19 @@
 class Orm
 
-  def initialize(usr, password, db)
-    @user = usr
-    @password = password
-    @db = db
-    options = {:user => @user, :password => @password, :host => '127.0.0.1', :dbname => @db}
+  def initialize(options)
+    options[:host] = "127.0.0.1"
     @con = PGconn.new(options)
   end
 
-  attr_reader :sequence
+ # def create_sequence
+   # @con.exec("CREATE SEQUENCE \"slack\";")
+ # end
 
-  def create_sequence(sequence_name)
-    @con.exec("CREATE SEQUENCE #{sequence_name};")
-    @secuence = sequence_name
-  end
+  private
 
   def create_table (table_name)
-    @con.exec("CREATE TABLE #{table_name} (id INTEGER PRIMARY KEY DEFAULT NEXTVAL('#{@secuence}'), name VARCHAR(64));")
+     query = "CREATE TABLE #{table_name} (id INTEGER PRIMARY KEY, name VARCHAR(64));"
+    @con.exec(query)
   end
 
   def add_items(table_name, items)
@@ -49,7 +46,6 @@ class Orm
     @con.exec("DROP TABLE IF EXISTS #{table_name}")
   end
 
-  private
   def close_connection
     @con.close
   end
@@ -67,7 +63,6 @@ class Orm
         i += 1
       end
     end
-    puts str
     @con.prepare("insert_#{table_name}", "insert into #{table_name} (#{fields[0]}) values #{str}")
   end
 
